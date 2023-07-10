@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Query Results</title>
+  <link rel="stylesheet" type="text/css" href="admin.css">
+  <link rel="stylesheet" type="text/css" href="query-results.css">
+</head>
+<body>
+  <h3>Query Results</h3>
+  <h2>Number to Query: <span id="numberToQuery"><%= numberToQuery %></span></h2>
+
+  <% if (items.length > 0) { %>
+    <h3>Query Results:</h3>
+    <table>
+      <thead>
+        <tr>
+          <% Object.keys(items[0]).forEach(function(key) { %>
+            <th><%= key %></th>
+          <% }); %>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function(item) { %>
+          <tr>
+            <% Object.values(item).forEach(function(value) { %>
+              <td><%= value %></td>
+            <% }); %>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No matching item found.</p>
+  <% } %>
+
+  <script>
+    window.onload = function() {
+      var numberToQuery = '<%= numberToQuery %>';
+      document.getElementById('numberToQuery').innerText = numberToQuery;
+      document.getElementById('numberToQueryInput').value = numberToQuery;
+    };
+  </script>
+</body>
+</html>
