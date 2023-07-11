@@ -114,7 +114,7 @@ app.get('/', (req, res) => {
   res.render('form', { numberToQuery: '' });
 });
 
-const port = 3002;
+const port = 3000;
 const server = http.createServer(app);
 const io = socketIO(server);
 
