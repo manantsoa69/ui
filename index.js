@@ -10,6 +10,8 @@ const { saveNumberAndFBID, getStoredNumbers } = require('./mongodb');
 
 require('dotenv').config();
 
+const server0Url = process.env.SERVER0_URL || 'https://server0.adaptable.app';
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -78,7 +80,7 @@ app.post('/subscribe', async (req, res) => {
       subscriptionStatus
     };
 
-    const response = await axios.post('https://server0.adaptable.app/subscribe', new URLSearchParams(payload));
+    const response = await axios.post(`${server0Url}/subscribe`, new URLSearchParams(payload));
 
     const responseData = response.data;
 
@@ -102,7 +104,7 @@ app.post('/send_message', async (req, res) => {
       fbid
     };
 
-    const response = await axios.post('https://server0-ikandraenligne.b4a.run/send_message', new URLSearchParams(payload));
+    const response = await axios.post(`${server0Url}/send_message`, new URLSearchParams(payload));
 
     const responseData = response.data;
     res.json(responseData);
