@@ -6,7 +6,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 const axios = require('axios');
 const mongoose = require('mongoose');
-const { saveNumberAndFBID, getStoredNumbers } = require('./db/mongodb');
+const { saveNumberAndFBID, getStoredNumbers } = require('./mongodb');
 
 require('dotenv').config();
 
