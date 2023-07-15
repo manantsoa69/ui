@@ -3,14 +3,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
-const WebSocket = require('ws');
+const socketIO = require('socket.io');
 const axios = require('axios');
 const mongoose = require('mongoose');
-const { saveNumberAndFBID, getStoredNumbers } = require('./mongodb');
+const { saveNumberAndFBID, getStoredNumbers } = require('./db/mongodb');
 
 require('dotenv').config();
-
-const server0Url = process.env.SERVER0_URL || 'https://server0.adaptable.app';
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,9 +46,7 @@ app.post('/api/numbers', async (req, res) => {
 
     res.status(200).json({ message: 'Number and FBID received' });
 
-    wss.clients.forEach(client => {
-      client.send(JSON.stringify({ number, fbid }));
-    });
+    io.emit('newNumber', { number, fbid });
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'An error occurred' });
@@ -80,7 +76,7 @@ app.post('/subscribe', async (req, res) => {
       subscriptionStatus
     };
 
-    const response = await axios.post(`${server0Url}/subscribe`, new URLSearchParams(payload));
+    const response = await axios.post('https://mana-84xb.onrender.com/subscribe', new URLSearchParams(payload));
 
     const responseData = response.data;
 
@@ -104,7 +100,7 @@ app.post('/send_message', async (req, res) => {
       fbid
     };
 
-    const response = await axios.post(`${server0Url}/send_message`, new URLSearchParams(payload));
+    const response = await axios.post('https://server0-ikandraenligne.b4a.run/send_message', new URLSearchParams(payload));
 
     const responseData = response.data;
     res.json(responseData);
@@ -120,19 +116,7 @@ app.get('/', (req, res) => {
 
 const port = 3002;
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-
-wss.on('connection', ws => {
-  console.log('New WebSocket connection');
-
-  ws.on('message', message => {
-    console.log('Received message:', message);
-  });
-
-  ws.on('close', () => {
-    console.log('WebSocket connection closed');
-  });
-});
+const io = socketIO(server);
 
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
