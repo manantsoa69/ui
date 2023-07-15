@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 const { saveNumberAndFBID, getStoredNumbers } = require('./mongodb');
 
 require('dotenv').config();
-
+const subUrl = process.env.SUB_URL || 'https://server0.adaptable.app';
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -76,7 +76,7 @@ app.post('/subscribe', async (req, res) => {
       subscriptionStatus
     };
 
-    const response = await axios.post('https://mana-84xb.onrender.com/subscribe', new URLSearchParams(payload));
+    const response = await axios.post(`${subUrl}/subscribe`, new URLSearchParams(payload));
 
     const responseData = response.data;
 
